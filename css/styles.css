@@ -1,0 +1,38 @@
+body {
+    background-color: ;
+    color: ;
+}
+input {
+    color: blue;
+    font-family: verdana;
+    font-size: 200%;
+}
+h2{
+	text-align: center;
+}
+div.left {
+    background-color: blue;
+    text-align: left;
+    width: 50%;
+    color: white;
+}
+
+div.right {
+    background-color: green;
+    text-align: left;
+    width: 50%;
+    color: white;
+}
+.flex-container{
+	display: -webkit-flex;
+    display: flex;
+    width: 100%
+}
+ol, ul, li{
+list-style-type: none;
+}
+footer > div{
+	width: 25%;
+	color: black;
+
+}
