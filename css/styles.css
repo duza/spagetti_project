@@ -1,6 +1,6 @@
 body {
-    background-color: ;
-    color: ;
+    background-color: #d3d3d3;
+    color: black;
 }
 input {
     color: blue;
@@ -35,4 +35,7 @@ footer > div{
 	width: 25%;
 	color: black;
 
+}
+#number-items div{
+display:block;
 }
