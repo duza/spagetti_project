@@ -158,10 +158,10 @@ function readyFn(){
         }
 		$('ul').html(text);
 		countItems();
-		console.log($(':checked'));
-        // $(':checked').map(
-        //     crossOut)
-        // );
+		//console.log($(':checked'));
+        $('#user-list :checkbox:checked').map(function(){
+            crossOut($(this).parent().parent());
+        });
     }
 
     function createStoredListItems(){
