@@ -99,8 +99,9 @@ function readyFn(){
         $enterButton.val("");
     }
 	function objToHtml(objItem){
-    	var htmlText = "<li><label><input type=" + objItem.type + " id=" + objItem.id + " " +
-            (objItem.checked ? "checked": "") + ">" + objItem.text + "</label></li>"
+        var style = (objItem.checked ? " style='text-decoration:line-through;color:grey'" : "");
+        var htmlText = "<li" + style + " ><label><input type=" + objItem.type + " id=" + objItem.id + " " +
+            (objItem.checked ? "checked": "") + ">" + objItem.text + "</label></li>";
 		return htmlText;
     }
     function addToStoredItems(lastAddedItem){
@@ -131,10 +132,7 @@ function readyFn(){
            	crossOut(item);
             targetItem[0].checked = true;
         } else {
-            item.css({
-                'text-decoration':'none',
-                'color':'black'
-            });
+            removeCrossOut(item);
             targetItem[0].checked = false;
         }
         localStorage.setItem("listItems", JSON.stringify(listItems));
@@ -145,6 +143,13 @@ function readyFn(){
         item.css({
             'text-decoration':'line-through',
             'color':'grey'
+        });
+    }
+
+    function removeCrossOut(item) {
+        item.css({
+            'text-decoration':'none',
+            'color':'black'
         });
     }
 
@@ -159,9 +164,9 @@ function readyFn(){
 		$('ul').html(text);
 		countItems();
 		//console.log($(':checked'));
-        $('#user-list :checkbox:checked').map(function(){
-            crossOut($(this).parent().parent());
-        });
+        // $('#user-list :checkbox:checked').map(function(){
+         //    crossOut($(this).parent().parent());
+        // });
     }
 
     function createStoredListItems(){
