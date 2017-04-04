@@ -95,7 +95,7 @@ function readyFn(){
         counterCheckboxes++;
         localStorage.setItem("counterCheckboxes", JSON.stringify(counterCheckboxes));
         if (userText !== '') {
-            if (uniqueText(userText)) {
+            if (uniqueText(userText.trim())) {
                 var Obj = {
                     type: "checkbox",
                     id: "checkbox" + counterCheckboxes,
