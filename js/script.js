@@ -71,26 +71,47 @@ function readyFn(){
         }
     }
 
+    function uniqueText(userText) {
+        var listItems = JSON.parse(localStorage.listItems);
+        //var matchedTextItems = listItems.map(function(item){return item.text;});
+        for(var i=0; i<listItems.length; i++){
+            if (listItems[i].text == userText){
+                return false;
+            }
+        }
+        //console.log(matchedTextItems);
+        return true;
+        /*if (userText in matchedTextItems) {
+            return false;
+        }
+        else{
+            return true;
+        }*/
+    }
+
     function addToList($enterButton, selectedGroup){
         var userText = $enterButton.val()
         var $userList = $('#user-list');
         counterCheckboxes++;
         localStorage.setItem("counterCheckboxes", JSON.stringify(counterCheckboxes));
-        if (userText !== ''){
-        	var Obj = {
-        		type: "checkbox",
-				id: "checkbox" + counterCheckboxes,
-				checked: false,
-				text: userText
-			}
-        	/*var addingHtml = "<li><label><input type=" + Obj.type + " id=" + Obj.id +
-			(Obj.checked ? "checked": "") + ">" + Obj.text + "</label></li>"
-			*/
-        	var addingHtml = objToHtml(Obj);
-			$userList.append(addingHtml);
-			addToStoredItems(Obj);
-			if (selectedGroup.complited){
-                $("li").last().toggle();
+        if (userText !== '') {
+            if (uniqueText(userText)) {
+                var Obj = {
+                    type: "checkbox",
+                    id: "checkbox" + counterCheckboxes,
+                    checked: false,
+                    text: userText
+                }
+                //var addingHtml = objToHtml(Obj);
+                var addingHtml = objToHtml(Obj);
+                $userList.append(addingHtml);
+                addToStoredItems(Obj);
+                if (selectedGroup.complited) {
+                    $("li").last().toggle();
+                }
+            }
+            else {
+                alert("Entered duplicate text. Please, enter another text.");
             }
         }
         else{
@@ -101,14 +122,37 @@ function readyFn(){
 	function objToHtml(objItem){
         var style = (objItem.checked ? " style='text-decoration:line-through;color:grey'" : "");
         var htmlText = "<li" + style + " ><label><input type=" + objItem.type + " id=" + objItem.id + " " +
-            (objItem.checked ? "checked": "") + ">" + objItem.text + "</label></li>";
+            (objItem.checked ? "checked": "") + ">" + objItem.text + "</label><span>\u00D7</span></li>";
 		return htmlText;
     }
+
+    /*function renderObjToItem(objItem){
+	    var $input = $("<input />").attr({
+            "type": objItem.type,
+            "id": objItem.id});
+        $input.prop("checked", objItem.checked);
+
+        var $label = $("<label />");
+	    $label.html($input);
+        console.log($label);
+	    $label.text(objItem.text);
+        var span = $("<span />").text("\u00D7");
+        $label.append(span);
+        var $li = $("<li />");
+        //console.log($label);
+        if (objItem.checked) {
+            $li = crossOut($li);
+        }
+        $li.html($label);
+        //console.log($li);
+        return $li;
+    }
+    */
     function addToStoredItems(lastAddedItem){
         var listItems = JSON.parse(localStorage.listItems);
         listItems.push(lastAddedItem);
     	localStorage.setItem("listItems", JSON.stringify(listItems));
-        console.log(JSON.parse(localStorage.listItems));
+        //console.log(JSON.parse(localStorage.listItems));
         //$.extend(, myJSON);
     	//var listItems = JSON.parse(localStorage.listItems);
 		//listItems.li
@@ -126,7 +170,7 @@ function readyFn(){
         var listItems = JSON.parse(localStorage.listItems);
 		var idTarget = $target.attr("id");
         var targetItem = $.grep(listItems, function(e){ return e.id == idTarget; });
-        console.log(targetItem);
+        //console.log(targetItem);
         var item = clickedChkBox.parent().parent();
         if (clickedChkBox.is(':checked')){
            	crossOut(item);
@@ -136,7 +180,7 @@ function readyFn(){
             targetItem[0].checked = false;
         }
         localStorage.setItem("listItems", JSON.stringify(listItems));
-        console.log(localStorage.listItems);
+        //console.log(localStorage.listItems);
     }
 
     function crossOut(item) {
@@ -155,13 +199,13 @@ function readyFn(){
 
     function displayStoredItems() {
         var listItems = JSON.parse(localStorage.listItems);
-    	console.log("Display", listItems);
-		text = ''
+    	//console.log("Display", listItems);
+		var uList = $('ul');
     	for (x in listItems) {
-			console.log(listItems[x]);
-            text += objToHtml(listItems[x]);
+			//console.log(listItems[x]);
+            uList.append(objToHtml(listItems[x]));
         }
-		$('ul').html(text);
+		//$('ul').html(text);
 		countItems();
 		//console.log($(':checked'));
         // $('#user-list :checkbox:checked').map(function(){
@@ -184,6 +228,26 @@ function readyFn(){
         }
 	}
 
+	function closeItem() {
+        var $input = $(this).prev().children();
+
+        var listItems = JSON.parse(localStorage.listItems);
+        //var index = Number($input.attr("id").slice(8));
+        var idTarget = $input.attr("id");
+        console.log(idTarget);
+        //var targetItem = $.grep(listItems, function(el){ return el.id == idTarget; });
+        listItems = listItems.filter(function foo (item) { return item.id !== idTarget; });
+        console.log(listItems);
+        //listItems.splice(index,1);
+        var $target = $(this).parent();
+        $target.remove();
+        //listItems.splice(index-1,1)
+
+        localStorage.setItem("listItems", JSON.stringify(listItems));
+        counterCheckboxes--;
+        localStorage.setItem("counterCheckboxes", JSON.stringify(counterCheckboxes));
+        countItems();
+    }
 	//localStorage.clear();
     createStoredListItems();
     var counterCheckboxes = JSON.parse(localStorage.counterCheckboxes);
@@ -207,8 +271,9 @@ function readyFn(){
 	$('ul').on('click', 'input[type="checkbox"]', function(){
 
 		selectedGroup = handleChkBox(selectedGroup, $(this));
-		console.log($(this).attr("id"));
+		//console.log($(this).attr("id"));
 		});
+	$('ul').on('click', 'span', closeItem);
 	$("#all input[type='button']").on('click', function(){
 		selectedGroup = showAllItems();
 	});

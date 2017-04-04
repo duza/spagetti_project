@@ -39,7 +39,13 @@ footer > div{
 #number-items div{
 display:block;
 }
-input[type='checkbox']:checked{
+* {
+    box-sizing: border-box;
+}
+span{
+   cursor: pointer;
+}
+/*input[type='checkbox']:checked{
     text-decoration:line-through;
     color:grey;
-}
+}*/
